@@ -31,12 +31,12 @@ module GenServer
       case Ractor.receive
       in [:cast, message, klass]
         klass.allocate.handle_cast(message, state) => [:noreply, new_state]
-        receive(new_state)
       in [:call, sender, message, klass]
         klass.allocate.handle_call(message, sender, state) => [:reply, reply, new_state]
         sender.send [:ok, reply]
-        receive(new_state)
       end
+
+      receive(new_state)
     end
 
     def cast(pid, message)
