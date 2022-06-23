@@ -10,14 +10,19 @@ module GenServer
   def self.cast: (String pid, [:push, untyped] message) -> :ok
   def self.call: (String pid, :pop message) -> untyped
 
+  class PID
+    def inspect: -> String
+    alias to_s inspect
+  end
+
   class Registry
     include Singleton
 
-    attr_reader pids: Hash[String, Struct[untyped]]
+    attr_reader pids: Hash[PID, Struct[untyped]]
     def initialize: -> void
-    def self.[]=: (String pid, Struct[untyped] info) -> untyped
-    def self.actor: (String pid) -> Ractor
-    def self.klass: (String pid) -> Class
+    def self.[]=: (PID pid, Struct[untyped] info) -> untyped
+    def self.actor: (PID pid) -> Ractor
+    def self.klass: (PID pid) -> Class
 
     class Info < Struct[untyped]
       attr_accessor actor(): Ractor

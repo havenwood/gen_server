@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'securerandom'
 require 'singleton'
+require_relative 'gen_server/pid'
 require_relative 'gen_server/registry'
 require_relative 'gen_server/version'
 
@@ -16,9 +16,9 @@ module GenServer
 
   class << self
     def start_link(klass, state = [])
-      pid = SecureRandom.uuid
+      pid = PID.new
 
-      actor = Ractor.new(state, name: pid) do |state|
+      actor = Ractor.new(state, name: pid.to_s) do |state|
         GenServer.receive(state)
       end
 
