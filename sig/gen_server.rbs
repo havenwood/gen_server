@@ -2,13 +2,13 @@ module GenServer
   VERSION: String
 
   def initialize: (*untyped noname) -> void
-  def init: (*untyped noname) -> untyped
-  def handle_call: (*untyped noname) -> [:reply, untyped, untyped]
-  def handle_cast: (*untyped noname) -> [:noreply, untyped]
-  def self.start_link: (singleton(Class) klass, ?Array[untyped] state) -> bot
+  def init: (*untyped noname) -> void
+  def handle_call: (Symbol message, Ractor sender, untyped state) -> [:reply, untyped, untyped]
+  def handle_cast: (Symbol message, untyped state) -> [:noreply, untyped]
+  def self.start_link: (singleton(Class) klass, ?untyped state) -> [:ok, PID]
   def self.receive: (untyped state) -> bot
-  def self.cast: (String pid, [:push, untyped] message) -> :ok
-  def self.call: (String pid, :pop message) -> untyped
+  def self.cast: (PID pid, [Symbol, untyped] message) -> :ok
+  def self.call: (PID pid, Symbol message) -> untyped
 
   class PID
     def inspect: -> String
@@ -18,15 +18,15 @@ module GenServer
   class Registry
     include Singleton
 
-    attr_reader pids: Hash[PID, Struct[untyped]]
+    attr_reader pids: Hash[PID, Info]
     def initialize: -> void
-    def self.[]=: (PID pid, Struct[untyped] info) -> untyped
+    def self.[]=: (PID pid, Info info) -> Info
     def self.actor: (PID pid) -> Ractor
     def self.klass: (PID pid) -> Class
 
-    class Info < Struct[untyped]
-      attr_accessor actor(): Ractor
-      attr_accessor klass(): Class
+    class Info < Struct[Ractor | Class]
+      attr_accessor actor(): Class
+      attr_accessor klass(): Ractor
     end
   end
 end

@@ -5,5 +5,5 @@ target :lib do
 
   check 'lib'
 
-  library 'securerandom', 'singleton'
+  library 'singleton'
 end
