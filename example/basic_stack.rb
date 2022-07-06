@@ -24,6 +24,13 @@ class BasicStack
 end
 
 GenServer.start_link(BasicStack, [:hello]) => [:ok, pid]
+#=> nil
+
 p GenServer.call(pid, :pop)
+#=> :hello
+
 p GenServer.cast(pid, %i[push world])
+#=> :ok
+
 p GenServer.call(pid, :pop)
+#=> :world

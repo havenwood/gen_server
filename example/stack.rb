@@ -42,6 +42,13 @@ class Stack
 end
 
 Stack.start_link([:hello]) => [:ok, pid]
+#=> nil
+
 p Stack.pop(pid)
+#=> :hello
+
 p Stack.push(pid, :world)
+#=> :ok
+
 p Stack.pop(pid)
+#=> :world

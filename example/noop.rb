@@ -7,6 +7,13 @@ class Noop
 end
 
 GenServer.start_link(Noop, []) => [:ok, pid]
+#=> nil
+
 p GenServer.call(pid, :foo)
+#=> nil
+
 p GenServer.cast(pid, %i[push bar])
+#=> :ok
+
 p GenServer.call(pid, :foo)
+#=> nil
