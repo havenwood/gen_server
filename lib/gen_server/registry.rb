@@ -18,8 +18,16 @@ module GenServer
         instance.pids[pid] = info
       end
 
+      def [](pid)
+        instance.pids[pid]
+      end
+
       def fetch(pid)
         instance.pids.fetch(pid)
+      end
+
+      def delete(pid)
+        instance.pids.delete(pid)
       end
     end
   end

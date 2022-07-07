@@ -2,13 +2,15 @@ module GenServer
   VERSION: String
 
   def init: (untyped state) -> void
-  def handle_call: (Symbol message, Ractor sender, untyped state) -> [:reply, untyped, untyped]
   def handle_cast: (Symbol message, untyped state) -> [:noreply, untyped]
-  def self.start_link: (singleton(Class) klass, ?untyped state) -> [:ok, PID]
+  def handle_call: (Symbol message, Ractor sender, untyped state) -> [:reply, untyped, untyped]
+  def terminate: (Symbol reason, untyped state) -> [:stop]
+
+  def self.start_link: (singleton(Class) receiver, ?untyped initial_state, ?name: Symbol?) -> [:ok, PID]
   def self.receive: (untyped state) -> bot
   def self.cast: (PID pid, [Symbol, untyped] message) -> :ok
   def self.call: (PID pid, Symbol message) -> untyped
-
+  def self.stop: (PID pid, Symbol reason) -> :ok
 
   class PID
     def inspect: -> String
@@ -21,7 +23,9 @@ module GenServer
     attr_reader pids: Hash[PID, Info]
     def initialize: -> void
     def self.[]=: (PID pid, Info info) -> Info
+    def self.[]: (PID pid) -> Info?
     def self.fetch: (PID pid) -> Info
+    def self.delete: (PID pid) -> Info
 
     class Info < Struct[Ractor | Class]
       attr_accessor actor(): Class

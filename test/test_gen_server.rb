@@ -48,6 +48,10 @@ module Stack
     GenServer.call(pid, :pop)
   end
 
+  def stop(pid)
+    GenServer.stop(pid, :normal)
+  end
+
   # Server (callbacks)
 
   def init(stack)
@@ -65,6 +69,12 @@ module Stack
     state.unshift(element)
 
     [:noreply, element]
+  end
+
+  def terminate(_reason, state)
+    state.clear
+
+    [:stop]
   end
 end
 
@@ -121,6 +131,11 @@ describe GenServer do
       assert_equal :hello, MyStack.pop(@pid)
       assert_equal :ok, MyStack.push(@pid, :world)
       assert_equal :world, MyStack.pop(@pid)
+    end
+
+    it 'terminates' do
+      assert_equal :ok, Stack.stop(@pid)
+      assert_nil GenServer::Registry[@pid]
     end
   end
 end

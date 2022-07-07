@@ -6,8 +6,9 @@ require_relative 'gen_server/version'
 
 module GenServer
   def init(state) = [:ok, state]
-  def handle_cast(...) = [:noreply, nil]
-  def handle_call(...) = [:reply, nil, nil]
+  def handle_cast(_message, _state) = [:noreply, nil]
+  def handle_call(_message, _sender, _state) = [:reply, nil, nil]
+  def terminate(_reason, _state) = [:stop]
 
   class << self
     def start_link(receiver, initial_state = [], name: nil)
@@ -33,6 +34,8 @@ module GenServer
       in [:call, sender, message, receiver]
         receiver.handle_call(message, sender, state) => [:reply, reply, new_state]
         sender.send [:ok, reply]
+      in [:stop, reason, receiver]
+        receiver.terminate(reason, state) => [:stop]
       end
 
       receive(new_state)
@@ -51,6 +54,14 @@ module GenServer
       Ractor.receive => [:ok, response]
 
       response
+    end
+
+    def stop(pid, reason)
+      Registry.fetch(pid).values => [actor, receiver]
+      actor.send [:stop, reason, receiver]
+      Registry.delete(pid)
+
+      :ok
     end
   end
 end
