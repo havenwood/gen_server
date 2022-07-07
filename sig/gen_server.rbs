@@ -1,7 +1,7 @@
 module GenServer
   VERSION: String
 
-  def init: (*untyped noname) -> void
+  def init: (untyped state) -> void
   def handle_call: (Symbol message, Ractor sender, untyped state) -> [:reply, untyped, untyped]
   def handle_cast: (Symbol message, untyped state) -> [:noreply, untyped]
   def self.start_link: (singleton(Class) klass, ?untyped state) -> [:ok, PID]
@@ -9,7 +9,7 @@ module GenServer
   def self.cast: (PID pid, [Symbol, untyped] message) -> :ok
   def self.call: (PID pid, Symbol message) -> untyped
 
-  
+
   class PID
     def inspect: -> String
     alias to_s inspect

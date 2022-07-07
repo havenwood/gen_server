@@ -6,7 +6,7 @@ require_relative 'gen_server/registry'
 require_relative 'gen_server/version'
 
 module GenServer
-  def init(...) = [:ok, []]
+  def init(state) = [:ok, state]
   def handle_call(...) = [:reply, nil, nil]
   def handle_cast(...) = [:noreply, nil]
 
