@@ -38,13 +38,15 @@ module GenServer
     end
 
     def cast(pid, message)
-      Registry.actor(pid).send [:cast, message, Registry.receiver(pid)]
+      Registry.fetch(pid).values => [actor, receiver]
+      actor.send [:cast, message, receiver]
 
       :ok
     end
 
     def call(pid, message)
-      Registry.actor(pid).send [:call, Ractor.current, message, Registry.receiver(pid)]
+      Registry.fetch(pid).values => [actor, receiver]
+      actor.send [:call, Ractor.current, message, receiver]
       Ractor.receive => [:ok, response]
 
       response

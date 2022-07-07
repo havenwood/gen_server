@@ -21,12 +21,11 @@ module GenServer
     attr_reader pids: Hash[PID, Info]
     def initialize: -> void
     def self.[]=: (PID pid, Info info) -> Info
-    def self.actor: (PID pid) -> Ractor
-    def self.klass: (PID pid) -> Class
+    def self.fetch: (PID pid) -> Info
 
     class Info < Struct[Ractor | Class]
       attr_accessor actor(): Class
-      attr_accessor klass(): Ractor
+      attr_accessor receiver(): Ractor
     end
   end
 end

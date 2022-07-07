@@ -17,12 +17,8 @@ module GenServer
         instance.pids[pid] = info
       end
 
-      def actor(pid)
-        instance.pids.fetch(pid).actor
-      end
-
-      def receiver(pid)
-        instance.pids.fetch(pid).receiver
+      def fetch(pid)
+        instance.pids.fetch(pid)
       end
     end
   end
