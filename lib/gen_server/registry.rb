@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'singleton'
 require_relative 'registry/info'
 
 module GenServer

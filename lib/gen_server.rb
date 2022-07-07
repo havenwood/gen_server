@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'singleton'
 require_relative 'gen_server/pid'
 require_relative 'gen_server/registry'
 require_relative 'gen_server/version'
