@@ -2,6 +2,6 @@
 
 module GenServer
   class Registry
-    Info = Struct.new(:actor, :klass, keyword_init: true)
+    Info = Struct.new(:actor, :receiver, keyword_init: true)
   end
 end

@@ -21,8 +21,8 @@ module GenServer
         instance.pids.fetch(pid).actor
       end
 
-      def klass(pid)
-        instance.pids.fetch(pid).klass
+      def receiver(pid)
+        instance.pids.fetch(pid).receiver
       end
     end
   end
