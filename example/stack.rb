@@ -2,23 +2,23 @@
 
 require_relative '../lib/gen_server'
 
-class Stack
-  include GenServer
+module Stack
+  extend GenServer
+
+  module_function
 
   ##
   # Client
-  class << self
-    def start_link(default = [])
-      GenServer.start_link(self, default)
-    end
+  def start_link(default = [])
+    GenServer.start_link(self, default)
+  end
 
-    def push(pid, element)
-      GenServer.cast(pid, [:push, element])
-    end
+  def push(pid, element)
+    GenServer.cast(pid, [:push, element])
+  end
 
-    def pop(pid)
-      GenServer.call(pid, :pop)
-    end
+  def pop(pid)
+    GenServer.call(pid, :pop)
   end
 
   ##

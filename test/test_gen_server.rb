@@ -2,12 +2,14 @@
 
 require_relative 'test_helper'
 
-class Noop
-  include GenServer
+module Noop
+  extend GenServer
 end
 
-class BasicStack
-  include GenServer
+module BasicStack
+  extend GenServer
+
+  module_function
 
   def init(stack)
     [:ok, stack]
@@ -35,14 +37,6 @@ describe GenServer do
 
     it 'has three parts' do
       assert_equal 3, GenServer::VERSION.split('.').size
-    end
-  end
-
-  describe 'start_link' do
-    it 'returns a pid' do
-      GenServer.start_link([]) => [:ok, pid]
-
-      assert pid
     end
   end
 

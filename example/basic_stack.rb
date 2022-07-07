@@ -2,8 +2,10 @@
 
 require_relative '../lib/gen_server'
 
-class BasicStack
-  include GenServer
+module BasicStack
+  extend GenServer
+
+  module_function
 
   def init(stack)
     [:ok, stack]

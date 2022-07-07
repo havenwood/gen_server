@@ -6,16 +6,14 @@ require_relative 'gen_server/registry'
 require_relative 'gen_server/version'
 
 module GenServer
-  def initialize(...)
-    init(...)
-  end
-
-  def init(...) = nil
+  def init(...) = [:ok, []]
   def handle_call(...) = [:reply, nil, nil]
   def handle_cast(...) = [:noreply, nil]
 
   class << self
-    def start_link(klass, state = [])
+    def start_link(klass, initial_state = [])
+      klass.init(initial_state) => [:ok, state]
+
       pid = PID.new
 
       actor = Ractor.new(state, name: pid.to_s) do |state|
@@ -30,9 +28,9 @@ module GenServer
     def receive(state)
       case Ractor.receive
       in [:cast, message, klass]
-        klass.allocate.handle_cast(message, state) => [:noreply, new_state]
+        klass.handle_cast(message, state) => [:noreply, new_state]
       in [:call, sender, message, klass]
-        klass.allocate.handle_call(message, sender, state) => [:reply, reply, new_state]
+        klass.handle_call(message, sender, state) => [:reply, reply, new_state]
         sender.send [:ok, reply]
       end
 

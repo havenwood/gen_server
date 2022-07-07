@@ -2,8 +2,8 @@
 
 require_relative '../lib/gen_server'
 
-class Noop
-  include GenServer
+module Noop
+  extend GenServer
 end
 
 GenServer.start_link(Noop, []) => [:ok, pid]
