@@ -7,8 +7,8 @@ require_relative 'gen_server/version'
 
 module GenServer
   def init(state) = [:ok, state]
-  def handle_call(...) = [:reply, nil, nil]
   def handle_cast(...) = [:noreply, nil]
+  def handle_call(...) = [:reply, nil, nil]
 
   class << self
     def start_link(receiver, initial_state = [])
