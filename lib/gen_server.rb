@@ -10,7 +10,9 @@ module GenServer
   def handle_call(...) = [:reply, nil, nil]
 
   class << self
-    def start_link(receiver, initial_state = [])
+    def start_link(receiver, initial_state = [], name: nil)
+      Object.const_set(name, receiver) if name
+
       receiver.init(initial_state) => [:ok, state]
 
       pid = PID.new
