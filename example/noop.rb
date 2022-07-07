@@ -7,7 +7,6 @@ module Noop
 end
 
 GenServer.start_link(Noop, []) => [:ok, pid]
-#=> nil
 
 p GenServer.call(pid, :foo)
 #=> nil

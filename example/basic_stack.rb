@@ -7,6 +7,8 @@ module BasicStack
 
   module_function
 
+  # Callbacks
+
   def init(stack)
     [:ok, stack]
   end
@@ -25,9 +27,10 @@ module BasicStack
   end
 end
 
+# Start the server
 GenServer.start_link(BasicStack, [:hello]) => [:ok, pid]
-#=> nil
 
+# This is the client
 p GenServer.call(pid, :pop)
 #=> :hello
 
