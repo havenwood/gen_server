@@ -1,6 +1,6 @@
 # GenServer
 
-This is a Ruby implementation of GenServer using Ractors.
+A Ruby implementation of GenServer using Ractors.
 
 ## Installation
 
@@ -16,4 +16,4 @@ gem install gen_server
 
 ## Usage
 
-Check out the `example/` directory for now.
+Check out the `example/` directory or the [Elixir GenServer docs](https://hexdocs.pm/elixir/GenServer.html).
