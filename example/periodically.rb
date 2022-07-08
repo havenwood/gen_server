@@ -31,7 +31,7 @@ module Periodically
 
   def schedule_work
     # We schedule the work to happen in 2 seconds (written in milliseconds).
-    GenServer.send_after(self, :work, 2 * 1_000)
+    GenServer.send_after(pid, :work, 2 * 1_000)
   end
 end
 

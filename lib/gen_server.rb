@@ -11,29 +11,34 @@ module GenServer
   def terminate(_reason, _state) = [:stop]
 
   class << self
-    def start_link(receiver, initial_state = [], name: nil)
+    def start_link(receiver, init_state = [], name: nil)
       Object.const_set(name, receiver) if name
 
-      receiver.init(initial_state) => [:ok, state]
-
       pid = PID.new
+      receiver.define_singleton_method(:pid) { pid }
 
-      actor = Ractor.new(state, name: pid.to_s) do |state|
-        GenServer.receive(state)
+      actor = Ractor.new(init_state, name: pid.to_s) do |init_state|
+        GenServer.receive(init_state)
       end
 
       Registry[pid] = Registry::Info.new(actor:, receiver:)
+      receiver.init(init_state) => [:ok, state]
+      actor.send([:initial, state])
 
       [:ok, pid]
     end
 
     def receive(state)
       case Ractor.receive
+      in [:initial, state]
+        new_state = state
       in [:cast, message, receiver]
         receiver.handle_cast(message, state) => [:noreply, new_state]
       in [:call, sender, message, receiver]
         receiver.handle_call(message, sender, state) => [:reply, reply, new_state]
         sender.send [:ok, reply]
+      in [:info, message, receiver]
+        receiver.handle_info(message, state) => [:noreply, new_state]
       in [:stop, reason, receiver]
         receiver.terminate(reason, state) => [:stop]
       end
@@ -62,6 +67,20 @@ module GenServer
       Registry.delete(pid)
 
       :ok
+    end
+
+    def send(pid, message)
+      Registry.fetch(pid).values => [actor, receiver]
+      #!> schedule_work': defined with an un-shareable Proc in a different Ractor (RuntimeError)
+      actor.send [:info, message, receiver]
+
+      :ok
+      
+    end
+
+    def send_after(pid, message, delay)
+      sleep delay.fdiv(1_000)
+      send(pid, message)
     end
   end
 end
