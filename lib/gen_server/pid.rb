@@ -3,7 +3,7 @@
 module GenServer
   class PID
     def inspect
-      "#<#{self.class}:#{format '%#018x', object_id}>"
+      "#<PID:#{format '%#018x', object_id}>"
     end
 
     alias to_s inspect
