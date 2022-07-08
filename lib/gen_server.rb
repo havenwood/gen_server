@@ -59,6 +59,7 @@ module GenServer
     def stop(pid, reason)
       Registry.fetch(pid).values => [actor, receiver]
       actor << [:stop, reason, receiver]
+      actor.close_outgoing
       Registry.delete(pid)
 
       :ok
