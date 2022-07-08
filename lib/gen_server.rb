@@ -33,7 +33,7 @@ module GenServer
         receiver.handle_cast(message, state) => [:noreply, new_state]
       in [:call, sender, message, receiver]
         receiver.handle_call(message, sender, state) => [:reply, reply, new_state]
-        sender.send [:ok, reply]
+        sender << [:ok, reply]
       in [:stop, reason, receiver]
         receiver.terminate(reason, state) => [:stop]
       end
@@ -43,14 +43,14 @@ module GenServer
 
     def cast(pid, message)
       Registry.fetch(pid).values => [actor, receiver]
-      actor.send [:cast, message, receiver]
+      actor << [:cast, message, receiver]
 
       :ok
     end
 
     def call(pid, message)
       Registry.fetch(pid).values => [actor, receiver]
-      actor.send [:call, Ractor.current, message, receiver]
+      actor << [:call, Ractor.current, message, receiver]
       Ractor.receive => [:ok, response]
 
       response
@@ -58,7 +58,7 @@ module GenServer
 
     def stop(pid, reason)
       Registry.fetch(pid).values => [actor, receiver]
-      actor.send [:stop, reason, receiver]
+      actor << [:stop, reason, receiver]
       Registry.delete(pid)
 
       :ok
