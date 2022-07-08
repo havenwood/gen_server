@@ -38,7 +38,7 @@ module GenServer
         receiver.terminate(reason, state) => [:stop]
       end
 
-      receive(new_state)
+      GenServer.receive(new_state)
     end
 
     def cast(pid, message)
