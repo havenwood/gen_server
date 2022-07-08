@@ -18,6 +18,7 @@ module GenServer
   end
 
   class Registry
+    extend Forwardable
     include Singleton
 
     attr_reader pids: Hash[PID, Info]
