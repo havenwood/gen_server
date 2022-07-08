@@ -18,11 +18,11 @@ module GenServer
 
       pid = PID.new
 
-      actor = Ractor.new(state, name: pid.to_s) do |state|
+      server = Ractor.new(state, name: pid.to_s) do |state|
         GenServer.receive(state)
       end
 
-      Registry[pid] = Registry::Info.new(actor:, receiver:)
+      Registry[pid] = Registry::Info.new(server:, receiver:)
 
       [:ok, pid]
     end
@@ -42,24 +42,24 @@ module GenServer
     end
 
     def cast(pid, message)
-      Registry.fetch(pid).values => [actor, receiver]
-      actor << [:cast, message, receiver]
+      Registry.fetch(pid).values => [server, receiver]
+      server << [:cast, message, receiver]
 
       :ok
     end
 
     def call(pid, message)
-      Registry.fetch(pid).values => [actor, receiver]
-      actor << [:call, Ractor.current, message, receiver]
+      Registry.fetch(pid).values => [server, receiver]
+      server << [:call, Ractor.current, message, receiver]
       Ractor.receive => [:ok, response]
 
       response
     end
 
     def stop(pid, reason)
-      Registry.fetch(pid).values => [actor, receiver]
-      actor << [:stop, reason, receiver]
-      actor.close_outgoing
+      Registry.fetch(pid).values => [server, receiver]
+      server << [:stop, reason, receiver]
+      server.close_outgoing
       Registry.delete(pid)
 
       :ok
