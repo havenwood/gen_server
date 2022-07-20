@@ -5,5 +5,5 @@ target :lib do
 
   check 'lib'
 
-  library 'singleton'
+  library 'forwardable', 'singleton'
 end
